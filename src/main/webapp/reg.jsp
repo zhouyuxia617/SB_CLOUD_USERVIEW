@@ -7,11 +7,10 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<form action="validUser" method="post">
+	用户注册-----------------------
+	<form action="user" method="post">
 		用户名：<input name="userName"/>
-		密码：<input name="password"/>
 		<input type="submit" value="提交"/>
-		<a href="reg.jsp">注册</a>
 	</form>
 </body>
 </html>

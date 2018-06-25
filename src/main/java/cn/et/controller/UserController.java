@@ -1,10 +1,19 @@
 package cn.et.controller;
 
+import java.util.Collections;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 
@@ -18,7 +27,11 @@ public class UserController {
 	@Autowired
 	private RestTemplate template;
 	
-	@RequestMapping("/validUser")
+	/**
+	 * 登录用户
+	 */
+	//@RequestMapping("/validUser")
+	@GetMapping("/validUser")
 	public String validUser(String userName,String password) {
 		
 		//这个地方调的是微服务，一台挂了可以调用另一台，可以负载均衡
@@ -31,6 +44,33 @@ public class UserController {
 			return "/login.jsp";
 		}
 	}
+	
+	
+	/**
+	 * 添加用户，使用rest风格
+	 */
+	@PostMapping("/user")
+	public String validUser(@RequestParam Map map) {
+		
+		//模拟一个请求头
+		HttpHeaders requestHeaders = new HttpHeaders();
+		//代表传递的是json
+		requestHeaders.setContentType(MediaType.APPLICATION_JSON);
+		//代表返回可接受的json类型
+		requestHeaders.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+		//将请求头和请求体(表单数据)打包
+		HttpEntity<Map> request = new HttpEntity<Map>(map,requestHeaders);
+		
+		//第一个调用微服务的路径，第二个是请求，第三个是返回的响应类型
+		String returnCode = template.postForObject("http://USERSERVICE/user", request, String.class);
+		
+		if(returnCode.equals("1")) {
+			return "/suc.jsp";
+		}else {
+			return "reg.jsp";
+		}
+	}
+	
 	
 	@Autowired
 	private LoadBalancerClient loadBalancer;
