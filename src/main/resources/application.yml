@@ -1,0 +1,31 @@
+#前端界面的端口
+server:
+    port: 80
+#设置注册中心当前主机的主机名
+eureka:
+    instance:
+        hostname: userserviceh
+        #取一个名字
+        appname: userservice
+    #注册到注册中心
+    client:
+        #要注册就把这个改为true，将自己作为一个微服务注册到注册中心，必须配一个上面那个appname:名字，默认是false不注册
+        registerWithEureka: true
+        #是否将注册中心上所有的微服务抓取到本地存储，要就改为true，默认是false
+        fetchRegistry: true
+        #该地址是用于发现微服务的
+        serviceUrl:
+            #这里取注册中心的yml文件中的主机名和端口
+            defaultZone: http://eurekaserver:8761/eureka/
+            
+            
+#连接数据库的四要素     
+spring:
+    datasource:
+        url: jdbc:mysql://localhost/my
+        username: root
+        password: zyx
+        driver-class-name: com.mysql.jdbc.Driver
+    application:
+        name: userservice       
+                       
