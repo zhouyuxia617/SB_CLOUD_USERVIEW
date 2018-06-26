@@ -1,6 +1,7 @@
 package cn.et.controller;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,9 +10,12 @@ import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -72,6 +76,39 @@ public class UserController {
 	}
 	
 	
+	/**
+	 * 修改用户，rest风格
+	 */
+	@PutMapping(value="/user/{userId}")
+	public String validUser(@PathVariable String userId,@RequestParam Map map) {
+		
+		//模拟请求头
+		HttpHeaders requestHeaders = new HttpHeaders();
+		//代表传递的是json类型
+		requestHeaders.setContentType(MediaType.APPLICATION_JSON);
+		//代表返回可接受json类型
+		requestHeaders.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+		
+		//将请求头和请求体（表单数据）打包
+		HttpEntity<Map> request = new HttpEntity<Map>(map,requestHeaders);
+		
+		//第一个调用微服务的路径，第二个是请求，第三个是返回的响应类型
+	//	String returnCode = template.postForObject("http://USERSERVICE/user1/{userId}"+userId, request, String.class);
+		Map variables = new HashMap();
+		variables.put("userId", userId);
+	//	ResponseEntity<String> postForEntity = template.postForEntity("http://USERSERVICE/user/{userId}"+userId, request, String.class,variables);		
+		template.put("http://USERSERVICE/user/{userId}", request,variables);
+	//	String returnCode = postForEntity.getBody();
+		String returnCode = "1";
+		
+		if(returnCode.equals("1")) {
+			return "/suc.jsp";
+		}else {
+			return "update.jsp";
+		}
+	}
+	
+
 	@Autowired
 	private LoadBalancerClient loadBalancer;
 	

@@ -6,7 +6,7 @@ eureka:
     instance:
         hostname: userserviceh
         #取一个名字
-        appname: userservice
+        appname: userview
     #注册到注册中心
     client:
         #要注册就把这个改为true，将自己作为一个微服务注册到注册中心，必须配一个上面那个appname:名字，默认是false不注册
@@ -26,6 +26,3 @@ spring:
         username: root
         password: zyx
         driver-class-name: com.mysql.jdbc.Driver
-    application:
-        name: userservice       
-                       
