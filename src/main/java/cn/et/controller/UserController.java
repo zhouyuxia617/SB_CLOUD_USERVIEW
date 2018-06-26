@@ -10,8 +10,8 @@ import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -105,6 +105,25 @@ public class UserController {
 			return "/suc.jsp";
 		}else {
 			return "update.jsp";
+		}
+	}
+	
+	/**
+	 * 删除用户，rest风格
+	 */
+	@DeleteMapping(value="/user/{userId}")
+	public String updateUser(@PathVariable String userId) {
+		//模拟请求头
+		Map variables = new HashMap();
+		variables.put("userId", userId);
+		
+		template.delete("http://USERSERVICE/user/{userId}",variables);
+		String returnCode = "1";
+		
+		if(returnCode.equals("1")) {
+			return "suc.jsp";
+		}else {
+			return "del.jsp";
 		}
 	}
 	
